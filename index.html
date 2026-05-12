@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YouTube Video Grid</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f0f0f;
+    --surface: #1a1a1a;
+    --surface2: #242424;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.15);
+    --text: #f0f0f0;
+    --text2: #999;
+    --text3: #666;
+    --accent: #ff4444;
+    --accent2: #ff6b35;
+    --green: #22c55e;
+    --radius: 10px;
+    --radius2: 14px;
+  }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* Header */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+  }
+
+  .logo-icon {
+    width: 36px; height: 36px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+
+  .add-row {
+    display: flex;
+    gap: 8px;
+    flex: 1;
+    max-width: 560px;
+  }
+
+  .url-input {
+    flex: 1;
+    height: 38px;
+    padding: 0 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .url-input::placeholder { color: var(--text3); }
+  .url-input:focus { border-color: var(--accent); }
+  .url-input.error { border-color: var(--accent); animation: shake 0.3s; }
+
+  @keyframes shake {
+    0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)}
+  }
+
+  .btn {
+    height: 38px;
+    padding: 0 16px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border2);
+    background: var(--surface2);
+    color: var(--text);
+    font-size: 13px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .btn:hover { background: var(--surface); border-color: rgba(255,255,255,0.25); }
+  .btn:active { transform: scale(0.97); }
+
+  .btn-red {
+    background: var(--accent);
+    border-color: transparent;
+    color: #fff;
+    font-weight: 500;
+  }
+  .btn-red:hover { background: #e03030; }
+
+  .btn-ghost {
+    background: transparent;
+    border-color: transparent;
+    color: var(--text2);
+    padding: 0 10px;
+  }
+  .btn-ghost:hover { background: var(--surface2); color: var(--text); }
+
+  /* Toolbar */
+  .toolbar {
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .toolbar-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .label { font-size: 12px; color: var(--text3); }
+
+  .col-btn {
+    width: 34px; height: 28px;
+    border-radius: 6px;
+    border: 1px solid var(--border2);
+    background: var(--surface2);
+    color: var(--text2);
+    font-size: 12px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .col-btn.active {
+    background: var(--accent);
+    border-color: transparent;
+    color: #fff;
+  }
+  .col-btn:hover:not(.active) { border-color: rgba(255,255,255,0.25); color: var(--text); }
+
+  .divider { width: 1px; height: 20px; background: var(--border); }
+
+  /* Session controls */
+  .session-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .session-input {
+    height: 28px;
+    padding: 0 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 12px;
+    outline: none;
+    width: 140px;
+  }
+  .session-input:focus { border-color: var(--accent); }
+
+  .sm-btn {
+    height: 28px;
+    padding: 0 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border2);
+    background: var(--surface2);
+    color: var(--text2);
+    font-size: 12px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.15s;
+  }
+  .sm-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.25); }
+
+  .toast {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 99px;
+    background: rgba(34,197,94,0.15);
+    color: var(--green);
+    border: 1px solid rgba(34,197,94,0.3);
+    display: none;
+  }
+
+  /* Main */
+  main { padding: 20px 24px; }
+
+  .video-grid {
+    display: grid;
+    gap: 10px;
+    transition: grid-template-columns 0.2s;
+  }
+
+  .video-card {
+    background: var(--surface);
+    border-radius: var(--radius2);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .iframe-wrap {
+    position: relative;
+    width: 100%;
+    background: #000;
+  }
+
+  .iframe-wrap iframe {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0; left: 0;
+    border: none;
+    display: block;
+  }
+
+  .card-footer {
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .card-label {
+    font-size: 12px;
+    color: var(--text2);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .remove-btn {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    border: 1px solid var(--border2);
+    background: transparent;
+    color: var(--text3);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .remove-btn:hover { background: rgba(255,68,68,0.15); border-color: var(--accent); color: var(--accent); }
+
+  /* Empty state */
+  .empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--text3);
+  }
+  .empty i { font-size: 52px; margin-bottom: 16px; display: block; opacity: 0.3; }
+  .empty p { font-size: 15px; margin-bottom: 6px; }
+  .empty small { font-size: 12px; opacity: 0.6; }
+
+  /* Ping bar */
+  .ping-bar {
+    position: fixed;
+    bottom: 16px;
+    right: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 99px;
+    padding: 6px 14px;
+    font-size: 11px;
+    color: var(--text3);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 200;
+  }
+
+  .ping-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--text3);
+    transition: background 0.3s;
+    flex-shrink: 0;
+  }
+  .ping-dot.alive { background: var(--green); box-shadow: 0 0 6px var(--green); }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">
+    <div class="logo-icon"><i class="ti ti-player-play" style="color:#fff;font-size:18px"></i></div>
+    Video Grid
+  </div>
+  <div class="add-row">
+    <input class="url-input" id="urlInput" type="text" placeholder="Paste YouTube URL or video ID…" />
+    <button class="btn btn-red" onclick="addVideo()">
+      <i class="ti ti-plus"></i> Add
+    </button>
+  </div>
+  <button class="btn" onclick="addDemos()" title="Load demo videos">
+    <i class="ti ti-sparkles"></i> Demo
+  </button>
+</header>
+
+<div class="toolbar">
+  <div class="toolbar-group">
+    <span class="label">Columns</span>
+    <button class="col-btn active" data-cols="1" onclick="setGrid(1)">1</button>
+    <button class="col-btn" data-cols="2" onclick="setGrid(2)">2</button>
+    <button class="col-btn" data-cols="3" onclick="setGrid(3)">3</button>
+    <button class="col-btn" data-cols="4" onclick="setGrid(4)">4</button>
+  </div>
+  <div class="divider"></div>
+  <div class="session-row">
+    <span class="label">Session:</span>
+    <input class="session-input" id="sessionName" placeholder="my-session" />
+    <button class="sm-btn" onclick="saveSession()"><i class="ti ti-device-floppy"></i> Save</button>
+    <button class="sm-btn" onclick="loadSession()"><i class="ti ti-folder-open"></i> Load</button>
+    <button class="sm-btn" onclick="listSessions()" title="List saved sessions"><i class="ti ti-list"></i></button>
+    <span class="toast" id="toast"></span>
+  </div>
+  <div class="divider"></div>
+  <button class="sm-btn" onclick="clearAll()" style="color:#ff4444">
+    <i class="ti ti-trash"></i> Clear all
+  </button>
+</div>
+
+<main>
+  <div class="video-grid" id="videoGrid">
+    <div class="empty" id="emptyState">
+      <i class="ti ti-device-tv"></i>
+      <p>No videos yet</p>
+      <small>Paste a YouTube URL above, or click Demo to load examples</small>
+    </div>
+  </div>
+</main>
+
+<div class="ping-bar">
+  <div class="ping-dot" id="pingDot"></div>
+  <span id="pingText">Connecting…</span>
+</div>
+
+<script>
+let videos = [];
+let cols = 1;
+
+/* ── helpers ── */
+function extractId(raw) {
+  raw = raw.trim();
+  const pats = [
+    /[?&]v=([A-Za-z0-9_-]{11})/,
+    /youtu\.be\/([A-Za-z0-9_-]{11})/,
+    /embed\/([A-Za-z0-9_-]{11})/,
+    /^([A-Za-z0-9_-]{11})$/
+  ];
+  for (const p of pats) { const m = raw.match(p); if (m) return m[1]; }
+  return null;
+}
+
+function iframeHeight() {
+  const w = document.getElementById('videoGrid').offsetWidth / cols - (cols > 1 ? 10 : 0);
+  return Math.round(w * 9 / 16);
+}
+
+/* ── render ── */
+function render() {
+  const grid = document.getElementById('videoGrid');
+  const empty = document.getElementById('emptyState');
+
+  if (videos.length === 0) {
+    grid.innerHTML = '';
+    grid.appendChild(empty);
+    grid.style.gridTemplateColumns = '1fr';
+    return;
+  }
+
+  grid.style.gridTemplateColumns = `repeat(${cols}, minmax(0, 1fr))`;
+  const h = iframeHeight();
+
+  grid.innerHTML = videos.map((v, i) => `
+    <div class="video-card">
+      <div class="iframe-wrap" style="padding-top:${(9/16*100).toFixed(2)}%">
+        <iframe
+          src="https://www.youtube.com/embed/${v.id}?rel=0&modestbranding=1&enablejsapi=1"
+          allowfullscreen
+          allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy"
+          title="${v.label}">
+        </iframe>
+      </div>
+      <div class="card-footer">
+        <span class="card-label">
+          <i class="ti ti-brand-youtube" style="color:#ff4444;margin-right:4px;vertical-align:-2px"></i>
+          ${escHtml(v.label)}
+        </span>
+        <button class="remove-btn" onclick="remove(${i})" aria-label="Remove">
+          <i class="ti ti-x"></i>
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ── actions ── */
+function addVideo(idOverride, labelOverride) {
+  const input = document.getElementById('urlInput');
+  const raw = idOverride || input.value;
+  const vid = extractId(raw);
+  if (!vid) {
+    input.classList.add('error');
+    setTimeout(() => input.classList.remove('error'), 600);
+    return;
+  }
+  videos.push({ id: vid, label: labelOverride || ('Video ' + (videos.length + 1)) });
+  input.value = '';
+  render();
+}
+
+function remove(i) { videos.splice(i, 1); render(); }
+
+function clearAll() { if (videos.length && confirm('Clear all videos?')) { videos = []; render(); } }
+
+function setGrid(n) {
+  cols = n;
+  document.querySelectorAll('.col-btn').forEach(b => b.classList.toggle('active', +b.dataset.cols === n));
+  render();
+}
+
+function addDemos() {
+  const demos = [
+    { id: 'jNQXAC9IVRw', label: 'Me at the zoo' },
+    { id: 'dQw4w9WgXcQ', label: 'Never Gonna Give You Up' },
+    { id: '9bZkp7q19f0', label: 'Gangnam Style' },
+    { id: 'kffacxfA7G4', label: 'Despacito' },
+  ];
+  demos.forEach(d => videos.push(d));
+  setGrid(2);
+}
+
+/* ── session storage ── */
+function showToast(msg, ok = true) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'inline-flex';
+  t.style.background = ok ? 'rgba(34,197,94,0.15)' : 'rgba(255,68,68,0.15)';
+  t.style.color = ok ? '#22c55e' : '#ff4444';
+  t.style.borderColor = ok ? 'rgba(34,197,94,0.3)' : 'rgba(255,68,68,0.3)';
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.style.display = 'none', 2500);
+}
+
+function sessionKey(name) { return 'ytgrid_session_' + name; }
+
+function saveSession() {
+  const name = document.getElementById('sessionName').value.trim() || 'default';
+  localStorage.setItem(sessionKey(name), JSON.stringify({ videos, cols, savedAt: new Date().toISOString() }));
+  showToast('Saved: ' + name);
+}
+
+function loadSession() {
+  const name = document.getElementById('sessionName').value.trim() || 'default';
+  const raw = localStorage.getItem(sessionKey(name));
+  if (!raw) { showToast('No session: ' + name, false); return; }
+  const d = JSON.parse(raw);
+  videos = d.videos || [];
+  setGrid(d.cols || 1);
+  showToast('Loaded: ' + name);
+}
+
+function listSessions() {
+  const keys = Object.keys(localStorage).filter(k => k.startsWith('ytgrid_session_'));
+  if (!keys.length) { showToast('No saved sessions', false); return; }
+  const names = keys.map(k => k.replace('ytgrid_session_', '')).join(', ');
+  showToast('Sessions: ' + names);
+}
+
+/* ── ping ── */
+function doPing() {
+  const dot = document.getElementById('pingDot');
+  const txt = document.getElementById('pingText');
+  fetch('/ping')
+    .then(r => r.json())
+    .then(d => {
+      dot.classList.add('alive');
+      txt.textContent = 'Server alive · ' + d.time;
+      setTimeout(() => dot.classList.remove('alive'), 3000);
+    })
+    .catch(() => {
+      dot.classList.remove('alive');
+      txt.textContent = 'Ping failed';
+    });
+}
+
+doPing();
+setInterval(doPing, 5 * 60 * 1000);
+
+/* ── keyboard ── */
+document.getElementById('urlInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addVideo();
+});
+
+window.addEventListener('resize', () => { if (videos.length) render(); });
+</script>
+</body>
+</html>
