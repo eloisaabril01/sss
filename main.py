@@ -7,7 +7,7 @@ import requests
 app = Flask(__name__)
 
 SELF_URL = os.environ.get("RENDER_EXTERNAL_URL", "http://localhost:5000")
-PING_INTERVAL = 60  # 10 minutes
+PING_INTERVAL = 60 # 10 minutes
 _started_ping = False
 _ping_lock = threading.Lock()
 _started_at = time.time()
@@ -28,29 +28,30 @@ def request_logger():
     log(f"🌐 {request.method} {request.path} | IP: {ip} | UA: {ua}")
 
 
+def ping_once() -> None:
+    ping_url = f"{SELF_URL}/api/status"
+    log(f"🏓 Sending self-ping → {ping_url}")
+
+    response = requests.get(
+        ping_url,
+        timeout=15,
+        headers={
+            "User-Agent": "Render-Self-Ping/1.0"
+        }
+    )
+
+    log(
+        f"🏓 Self-ping SUCCESS | "
+        f"Status: {response.status_code} | "
+        f"Response: {response.text[:120]}"
+    )
+
+
 def self_ping_loop() -> None:
     while True:
         time.sleep(PING_INTERVAL)
-
         try:
-            ping_url = f"{SELF_URL}/api/status"
-
-            log(f"🏓 Sending self-ping → {ping_url}")
-
-            response = requests.get(
-                ping_url,
-                timeout=15,
-                headers={
-                    "User-Agent": "Render-Self-Ping/1.0"
-                }
-            )
-
-            log(
-                f"🏓 Self-ping SUCCESS | "
-                f"Status: {response.status_code} | "
-                f"Response: {response.text[:120]}"
-            )
-
+            ping_once()
         except Exception as exc:
             log(f"❌ Self-ping FAILED: {exc}")
 
@@ -69,11 +70,14 @@ def start_self_ping() -> None:
             log("⚠️ RENDER_EXTERNAL_URL not set — self-ping disabled")
             return
 
-        thread = threading.Thread(
-            target=self_ping_loop,
-            daemon=True
-        )
+        def runner():
+            try:
+                ping_once()
+            except Exception as exc:
+                log(f"❌ Initial self-ping FAILED: {exc}")
+            self_ping_loop()
 
+        thread = threading.Thread(target=runner, daemon=True, name="self-ping")
         thread.start()
 
         log(f"🏓 Self-ping started → {SELF_URL}/api/status")
@@ -89,7 +93,6 @@ def index():
 @app.route("/ping")
 def ping():
     log("🏓 Manual ping endpoint hit")
-
     return jsonify(
         {
             "status": "alive",
@@ -101,9 +104,7 @@ def ping():
 @app.route("/api/status")
 def api_status():
     uptime = int(time.time() - _started_at)
-
     log(f"📊 Status requested | Uptime: {uptime}s")
-
     return jsonify(
         {
             "uptime": uptime,
@@ -117,7 +118,6 @@ def api_status():
 @app.route("/health")
 def health():
     log("💚 Health check requested")
-
     return jsonify(
         {
             "ok": True,
@@ -130,12 +130,6 @@ start_self_ping()
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-
     log(f"🚀 Flask server starting on port {port}")
     log(f"🌍 SELF_URL: {SELF_URL}")
-
-    app.run(
-        host="0.0.0.0",
-        port=port,
-        threaded=True
-    )
+    app.run(host="0.0.0.0", port=port, threaded=True)
