@@ -7,7 +7,7 @@ import requests
 app = Flask(__name__)
 
 SELF_URL = os.environ.get("RENDER_EXTERNAL_URL", "http://localhost:5000")
-PING_INTERVAL = 10 * 60  # 10 minutes
+PING_INTERVAL = 60  # 10 minutes
 _started_ping = False
 _ping_lock = threading.Lock()
 _started_at = time.time()
