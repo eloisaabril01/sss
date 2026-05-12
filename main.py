@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, jsonify, send_file
 import threading
 import time
 import requests
@@ -7,8 +7,7 @@ import os
 app = Flask(__name__)
 
 SELF_URL = os.environ.get("RENDER_EXTERNAL_URL", "http://localhost:5000")
-PING_INTERVAL = 5 * 60  # 5 minutes
-
+PING_INTERVAL = 5 * 60
 _ping_thread_started = False
 
 
@@ -33,7 +32,7 @@ def start_self_ping_thread():
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return send_file("index.html")
 
 
 @app.route("/ping")
@@ -42,7 +41,3 @@ def ping():
 
 
 start_self_ping_thread()
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
