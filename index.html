@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>YouTube Video Grid</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <style>
@@ -32,7 +32,6 @@
     padding: 0;
   }
 
-  /* Header */
   .header {
     background: var(--surface);
     border-bottom: 1px solid var(--border);
@@ -57,10 +56,13 @@
   }
 
   .logo-icon {
-    width: 36px; height: 36px;
+    width: 36px;
+    height: 36px;
     background: var(--accent);
     border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 18px;
   }
 
@@ -88,7 +90,9 @@
   .url-input.error { border-color: var(--accent); animation: shake 0.3s; }
 
   @keyframes shake {
-    0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)}
+    0%,100%{transform:translateX(0)}
+    25%{transform:translateX(-6px)}
+    75%{transform:translateX(6px)}
   }
 
   .btn {
@@ -117,15 +121,6 @@
   }
   .btn-red:hover { background: #e03030; }
 
-  .btn-ghost {
-    background: transparent;
-    border-color: transparent;
-    color: var(--text2);
-    padding: 0 10px;
-  }
-  .btn-ghost:hover { background: var(--surface2); color: var(--text); }
-
-  /* Toolbar */
   .toolbar {
     padding: 12px 24px;
     display: flex;
@@ -140,19 +135,23 @@
     display: flex;
     align-items: center;
     gap: 6px;
+    flex-wrap: wrap;
   }
 
   .label { font-size: 12px; color: var(--text3); }
 
   .col-btn {
-    width: 34px; height: 28px;
+    width: 34px;
+    height: 28px;
     border-radius: 6px;
     border: 1px solid var(--border2);
     background: var(--surface2);
     color: var(--text2);
     font-size: 12px;
     cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: all 0.15s;
   }
   .col-btn.active {
@@ -160,11 +159,13 @@
     border-color: transparent;
     color: #fff;
   }
-  .col-btn:hover:not(.active) { border-color: rgba(255,255,255,0.25); color: var(--text); }
+  .col-btn:hover:not(.active) {
+    border-color: rgba(255,255,255,0.25);
+    color: var(--text);
+  }
 
   .divider { width: 1px; height: 20px; background: var(--border); }
 
-  /* Session controls */
   .session-row {
     display: flex;
     align-items: center;
@@ -211,7 +212,6 @@
     display: none;
   }
 
-  /* Main */
   main { padding: 20px 24px; }
 
   .video-grid {
@@ -233,19 +233,26 @@
     position: relative;
     width: 100%;
     background: #000;
+    aspect-ratio: 16 / 9;
   }
 
-  .iframe-wrap iframe {
+  .iframe-wrap > div {
     width: 100%;
     height: 100%;
     position: absolute;
-    top: 0; left: 0;
+    inset: 0;
     border: none;
     display: block;
   }
 
   .card-footer {
-    padding: 8px 12px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .card-topline {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -258,23 +265,36 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    min-width: 0;
+  }
+
+  .watchline {
+    font-size: 11px;
+    color: #cfcfcf;
+    opacity: 0.95;
   }
 
   .remove-btn {
-    width: 24px; height: 24px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     border: 1px solid var(--border2);
     background: transparent;
     color: var(--text3);
     cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 12px;
     flex-shrink: 0;
     transition: all 0.15s;
   }
-  .remove-btn:hover { background: rgba(255,68,68,0.15); border-color: var(--accent); color: var(--accent); }
+  .remove-btn:hover {
+    background: rgba(255,68,68,0.15);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
 
-  /* Empty state */
   .empty {
     grid-column: 1 / -1;
     text-align: center;
@@ -285,7 +305,6 @@
   .empty p { font-size: 15px; margin-bottom: 6px; }
   .empty small { font-size: 12px; opacity: 0.6; }
 
-  /* Ping bar */
   .ping-bar {
     position: fixed;
     bottom: 16px;
@@ -303,13 +322,101 @@
   }
 
   .ping-dot {
-    width: 7px; height: 7px;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
     background: var(--text3);
     transition: background 0.3s;
     flex-shrink: 0;
   }
   .ping-dot.alive { background: var(--green); box-shadow: 0 0 6px var(--green); }
+
+  .watch-panel {
+    margin: 20px 24px 0;
+    padding: 18px;
+    border-radius: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+
+  .watch-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .watch-title {
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .watch-sub {
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--text2);
+  }
+
+  .watch-target-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text2);
+  }
+
+  .watch-target-box input {
+    width: 100px;
+    height: 36px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    color: var(--text);
+    border-radius: 10px;
+    padding: 0 12px;
+    outline: none;
+  }
+
+  .watch-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-top: 18px;
+  }
+
+  .watch-stat {
+    background: #222;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px;
+  }
+
+  .watch-stat span {
+    display: block;
+    color: var(--text2);
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+
+  .watch-stat strong {
+    font-size: 20px;
+  }
+
+  .progress-wrap {
+    width: 100%;
+    height: 18px;
+    background: var(--surface2);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-top: 18px;
+  }
+
+  .progress-bar {
+    height: 100%;
+    width: 0%;
+    background: var(--accent);
+    transition: width 0.5s;
+  }
 </style>
 </head>
 <body>
@@ -331,12 +438,28 @@
 </header>
 
 <div class="toolbar">
-  <div class="toolbar-group">
+  <div class="toolbar-group" id="gridButtons">
     <span class="label">Columns</span>
     <button class="col-btn active" data-cols="1" onclick="setGrid(1)">1</button>
     <button class="col-btn" data-cols="2" onclick="setGrid(2)">2</button>
     <button class="col-btn" data-cols="3" onclick="setGrid(3)">3</button>
     <button class="col-btn" data-cols="4" onclick="setGrid(4)">4</button>
+    <button class="col-btn" data-cols="5" onclick="setGrid(5)">5</button>
+    <button class="col-btn" data-cols="6" onclick="setGrid(6)">6</button>
+    <button class="col-btn" data-cols="7" onclick="setGrid(7)">7</button>
+    <button class="col-btn" data-cols="8" onclick="setGrid(8)">8</button>
+    <button class="col-btn" data-cols="9" onclick="setGrid(9)">9</button>
+    <button class="col-btn" data-cols="10" onclick="setGrid(10)">10</button>
+    <button class="col-btn" data-cols="11" onclick="setGrid(11)">11</button>
+    <button class="col-btn" data-cols="12" onclick="setGrid(12)">12</button>
+    <button class="col-btn" data-cols="13" onclick="setGrid(13)">13</button>
+    <button class="col-btn" data-cols="14" onclick="setGrid(14)">14</button>
+    <button class="col-btn" data-cols="15" onclick="setGrid(15)">15</button>
+    <button class="col-btn" data-cols="16" onclick="setGrid(16)">16</button>
+    <button class="col-btn" data-cols="17" onclick="setGrid(17)">17</button>
+    <button class="col-btn" data-cols="18" onclick="setGrid(18)">18</button>
+    <button class="col-btn" data-cols="19" onclick="setGrid(19)">19</button>
+    <button class="col-btn" data-cols="20" onclick="setGrid(20)">20</button>
   </div>
   <div class="divider"></div>
   <div class="session-row">
@@ -351,6 +474,45 @@
   <button class="sm-btn" onclick="clearAll()" style="color:#ff4444">
     <i class="ti ti-trash"></i> Clear all
   </button>
+</div>
+
+<div class="watch-panel">
+  <div class="watch-top">
+    <div>
+      <div class="watch-title">Watch Progress</div>
+      <div class="watch-sub" id="watchSub">Tracking session watchtime</div>
+    </div>
+    <div class="watch-target-box">
+      <span>Target Hours</span>
+      <input type="number" id="targetHours" value="3000" min="1">
+    </div>
+  </div>
+
+  <div class="watch-stats">
+    <div class="watch-stat">
+      <span>Total Watched</span>
+      <strong id="watchedHours">0h 0m 0s</strong>
+    </div>
+
+    <div class="watch-stat">
+      <span>Completed</span>
+      <strong id="completedPercent">0%</strong>
+    </div>
+
+    <div class="watch-stat">
+      <span>Remaining</span>
+      <strong id="remainingHours">3000h</strong>
+    </div>
+
+    <div class="watch-stat">
+      <span>Players Active</span>
+      <strong id="activePlayers">0</strong>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
 </div>
 
 <main>
@@ -368,108 +530,54 @@
   <span id="pingText">Connecting…</span>
 </div>
 
+<script src="https://www.youtube.com/iframe_api"></script>
 <script>
 let videos = [];
 let cols = 1;
+let players = [];
+let ytReady = false;
+let wakeLock = null;
+let keepAliveTimer = null;
+let watchTimer = null;
+let totalWatchSeconds = Number(localStorage.getItem("totalWatchSeconds") || 0);
+let lastTick = Date.now();
+let playerState = {};
 
-/* ── helpers ── */
 function extractId(raw) {
-  raw = raw.trim();
+  raw = String(raw || "").trim();
   const pats = [
     /[?&]v=([A-Za-z0-9_-]{11})/,
     /youtu\.be\/([A-Za-z0-9_-]{11})/,
     /embed\/([A-Za-z0-9_-]{11})/,
     /^([A-Za-z0-9_-]{11})$/
   ];
-  for (const p of pats) { const m = raw.match(p); if (m) return m[1]; }
+  for (const p of pats) {
+    const m = raw.match(p);
+    if (m) return m[1];
+  }
   return null;
 }
 
-function iframeHeight() {
-  const w = document.getElementById('videoGrid').offsetWidth / cols - (cols > 1 ? 10 : 0);
-  return Math.round(w * 9 / 16);
-}
-
-/* ── render ── */
-function render() {
-  const grid = document.getElementById('videoGrid');
-  const empty = document.getElementById('emptyState');
-
-  if (videos.length === 0) {
-    grid.innerHTML = '';
-    grid.appendChild(empty);
-    grid.style.gridTemplateColumns = '1fr';
-    return;
-  }
-
-  grid.style.gridTemplateColumns = `repeat(${cols}, minmax(0, 1fr))`;
-  const h = iframeHeight();
-
-  grid.innerHTML = videos.map((v, i) => `
-    <div class="video-card">
-      <div class="iframe-wrap" style="padding-top:${(9/16*100).toFixed(2)}%">
-        <iframe
-          src="https://www.youtube.com/embed/${v.id}?rel=0&modestbranding=1&enablejsapi=1"
-          allowfullscreen
-          allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-          loading="lazy"
-          title="${v.label}">
-        </iframe>
-      </div>
-      <div class="card-footer">
-        <span class="card-label">
-          <i class="ti ti-brand-youtube" style="color:#ff4444;margin-right:4px;vertical-align:-2px"></i>
-          ${escHtml(v.label)}
-        </span>
-        <button class="remove-btn" onclick="remove(${i})" aria-label="Remove">
-          <i class="ti ti-x"></i>
-        </button>
-      </div>
-    </div>
-  `).join('');
-}
-
 function escHtml(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(s)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
 }
 
-/* ── actions ── */
-function addVideo(idOverride, labelOverride) {
-  const input = document.getElementById('urlInput');
-  const raw = idOverride || input.value;
-  const vid = extractId(raw);
-  if (!vid) {
-    input.classList.add('error');
-    setTimeout(() => input.classList.remove('error'), 600);
-    return;
-  }
-  videos.push({ id: vid, label: labelOverride || ('Video ' + (videos.length + 1)) });
-  input.value = '';
-  render();
+function formatWatchTime(sec) {
+  sec = Math.max(0, Math.floor(sec));
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  const s = sec % 60;
+  return `${h}h ${m}m ${s}s`;
 }
 
-function remove(i) { videos.splice(i, 1); render(); }
-
-function clearAll() { if (videos.length && confirm('Clear all videos?')) { videos = []; render(); } }
-
-function setGrid(n) {
-  cols = n;
-  document.querySelectorAll('.col-btn').forEach(b => b.classList.toggle('active', +b.dataset.cols === n));
-  render();
+function sessionKey(name) {
+  return 'ytgrid_session_' + name;
 }
 
-function addDemos() {
-  const demos = [
-    { id: 'jNQXAC9IVRw', label: 'Me at the zoo' },
-    { id: 'dQw4w9WgXcQ', label: 'Never Gonna Give You Up' },
-    { id: '9bZkp7q19f0', label: 'Gangnam Style' },
-    { id: 'kffacxfA7G4', label: 'Despacito' },
-  ];
-  demos.forEach(d => videos.push(d));
-  setGrid(2);
-}
-
-/* ── session storage ── */
 function showToast(msg, ok = true) {
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -481,40 +589,310 @@ function showToast(msg, ok = true) {
   t._t = setTimeout(() => t.style.display = 'none', 2500);
 }
 
-function sessionKey(name) { return 'ytgrid_session_' + name; }
+function iframeHeight() {
+  const w = document.getElementById('videoGrid').offsetWidth / cols - (cols > 1 ? 10 : 0);
+  return Math.round(w * 9 / 16);
+}
+
+function destroyPlayers() {
+  if (Array.isArray(players) && players.length) {
+    players.forEach((p) => {
+      try { p.destroy(); } catch (e) {}
+    });
+  }
+  players = [];
+  playerState = {};
+}
+
+window.onYouTubeIframeAPIReady = function () {
+  ytReady = true;
+  render();
+  initPlayers();
+  requestWakeLock();
+  updateWatchUI();
+};
+
+function initPlayers() {
+  if (!ytReady || !videos.length) return;
+
+  destroyPlayers();
+
+  players = videos.map((v, i) => {
+    const targetId = `player-${i}`;
+    try {
+      return new YT.Player(targetId, {
+        videoId: v.id,
+        playerVars: {
+          autoplay: 1,
+          controls: 1,
+          rel: 0,
+          modestbranding: 1,
+          playsinline: 1,
+          mute: 1,
+          loop: 1,
+          playlist: v.id,
+          fs: 1,
+          iv_load_policy: 3,
+          disablekb: 0,
+          origin: window.location.origin
+        },
+        events: {
+          onReady: function (event) {
+            try {
+              event.target.mute();
+              event.target.playVideo();
+            } catch (e) {}
+          },
+          onStateChange: function (event) {
+            playerState[targetId] = event.data;
+            if (event.data === YT.PlayerState.ENDED || event.data === YT.PlayerState.PAUSED) {
+              setTimeout(() => {
+                try {
+                  event.target.mute();
+                  event.target.playVideo();
+                } catch (e) {}
+              }, 250);
+            }
+          }
+        }
+      });
+    } catch (e) {
+      return null;
+    }
+  }).filter(Boolean);
+
+  updateWatchUI();
+}
+
+function restartAllPlayers() {
+  if (!players.length) return;
+  players.forEach((player) => {
+    try {
+      player.mute();
+      player.playVideo();
+    } catch (e) {}
+  });
+}
+
+async function requestWakeLock() {
+  try {
+    if (!("wakeLock" in navigator)) return;
+    if (document.visibilityState !== "visible") return;
+    if (wakeLock) return;
+
+    wakeLock = await navigator.wakeLock.request("screen");
+    wakeLock.addEventListener("release", () => {
+      wakeLock = null;
+    });
+  } catch (e) {}
+}
+
+function startKeepAliveLoop() {
+  if (keepAliveTimer) clearInterval(keepAliveTimer);
+  keepAliveTimer = setInterval(() => {
+    restartAllPlayers();
+    requestWakeLock();
+  }, 8000);
+}
+
+function startWatchTracking() {
+  if (watchTimer) clearInterval(watchTimer);
+
+  watchTimer = setInterval(() => {
+    if (!players.length) {
+      updateWatchUI();
+      return;
+    }
+
+    let playingCount = 0;
+    let deltaSeconds = 0;
+
+    players.forEach((player, idx) => {
+      try {
+        const state = player.getPlayerState();
+        if (state === YT.PlayerState.PLAYING) {
+          playingCount++;
+          const key = 'player-' + idx;
+          const prev = player._lastWatchTime || 0;
+          const now = Number(player.getCurrentTime() || 0);
+          if (now >= prev) {
+            deltaSeconds += Math.min(1, Math.max(0, now - prev));
+          } else {
+            deltaSeconds += 1;
+          }
+          player._lastWatchTime = now;
+        } else if (state === YT.PlayerState.PAUSED || state === YT.PlayerState.ENDED) {
+          const key = 'player-' + idx;
+          try {
+            player._lastWatchTime = Number(player.getCurrentTime() || 0);
+          } catch (e) {}
+        }
+      } catch (e) {}
+    });
+
+    if (playingCount > 0) {
+      totalWatchSeconds += Math.max(1, Math.round(deltaSeconds));
+      localStorage.setItem("totalWatchSeconds", String(totalWatchSeconds));
+    }
+
+    updateWatchUI();
+  }, 1000);
+}
+
+function updateWatchUI() {
+  const targetHours = Number(document.getElementById("targetHours").value || 3000);
+  const targetSeconds = Math.max(1, targetHours * 3600);
+  const percent = Math.min((totalWatchSeconds / targetSeconds) * 100, 100);
+  const remaining = Math.max(targetSeconds - totalWatchSeconds, 0);
+
+  document.getElementById("watchedHours").textContent = formatWatchTime(totalWatchSeconds);
+  document.getElementById("completedPercent").textContent = percent.toFixed(2) + "%";
+  document.getElementById("remainingHours").textContent = formatWatchTime(remaining);
+  document.getElementById("activePlayers").textContent = players.length;
+  document.getElementById("progressBar").style.width = percent + "%";
+  document.getElementById("watchSub").textContent = `${players.length} active video(s) • ${targetHours}h target`;
+}
+
+function render() {
+  const grid = document.getElementById('videoGrid');
+  const empty = document.getElementById('emptyState');
+
+  if (videos.length === 0) {
+    destroyPlayers();
+    grid.innerHTML = '';
+    grid.appendChild(empty);
+    grid.style.gridTemplateColumns = '1fr';
+    updateWatchUI();
+    return;
+  }
+
+  grid.style.gridTemplateColumns = `repeat(${cols}, minmax(0, 1fr))`;
+  const h = iframeHeight();
+
+  grid.innerHTML = videos.map((v, i) => `
+    <div class="video-card">
+      <div class="iframe-wrap" style="height:${h}px">
+        <div id="player-${i}"></div>
+      </div>
+      <div class="card-footer">
+        <div class="card-topline">
+          <span class="card-label">
+            <i class="ti ti-brand-youtube" style="color:#ff4444;margin-right:4px;vertical-align:-2px"></i>
+            ${escHtml(v.label)}
+          </span>
+          <button class="remove-btn" onclick="remove(${i})" aria-label="Remove">
+            <i class="ti ti-x"></i>
+          </button>
+        </div>
+        <div class="watchline" id="watchline-${i}">Autoplay enabled</div>
+      </div>
+    </div>
+  `).join('');
+
+  if (ytReady) {
+    setTimeout(initPlayers, 250);
+  }
+}
+
+function addVideo(idOverride, labelOverride) {
+  const input = document.getElementById('urlInput');
+  const raw = idOverride || input.value;
+  const vid = extractId(raw);
+
+  if (!vid) {
+    input.classList.add('error');
+    setTimeout(() => input.classList.remove('error'), 600);
+    return;
+  }
+
+  videos.push({ id: vid, label: labelOverride || ('Video ' + (videos.length + 1)) });
+  input.value = '';
+  render();
+  if (ytReady) setTimeout(initPlayers, 250);
+  requestWakeLock();
+}
+
+function remove(i) {
+  videos.splice(i, 1);
+  render();
+  if (ytReady) setTimeout(initPlayers, 250);
+}
+
+function clearAll() {
+  if (videos.length && confirm('Clear all videos?')) {
+    videos = [];
+    destroyPlayers();
+    render();
+  }
+}
+
+function setGrid(n) {
+  cols = n;
+  document.querySelectorAll('.col-btn').forEach(b => b.classList.toggle('active', +b.dataset.cols === n));
+  render();
+  if (ytReady) setTimeout(initPlayers, 250);
+}
+
+function addDemos() {
+  const demos = [
+    { id: 'jNQXAC9IVRw', label: 'Me at the zoo' },
+    { id: 'dQw4w9WgXcQ', label: 'Never Gonna Give You Up' },
+    { id: '9bZkp7q19f0', label: 'Gangnam Style' },
+    { id: 'kffacxfA7G4', label: 'Despacito' },
+  ];
+  demos.forEach(d => videos.push(d));
+  setGrid(2);
+  requestWakeLock();
+}
 
 function saveSession() {
   const name = document.getElementById('sessionName').value.trim() || 'default';
-  localStorage.setItem(sessionKey(name), JSON.stringify({ videos, cols, savedAt: new Date().toISOString() }));
+  localStorage.setItem(sessionKey(name), JSON.stringify({
+    videos,
+    cols,
+    totalWatchSeconds,
+    savedAt: new Date().toISOString()
+  }));
   showToast('Saved: ' + name);
 }
 
 function loadSession() {
   const name = document.getElementById('sessionName').value.trim() || 'default';
   const raw = localStorage.getItem(sessionKey(name));
-  if (!raw) { showToast('No session: ' + name, false); return; }
+  if (!raw) {
+    showToast('No session: ' + name, false);
+    return;
+  }
   const d = JSON.parse(raw);
   videos = d.videos || [];
-  setGrid(d.cols || 1);
+  cols = d.cols || 1;
+  totalWatchSeconds = Number(d.totalWatchSeconds || totalWatchSeconds || 0);
+  document.querySelectorAll('.col-btn').forEach(b => b.classList.toggle('active', +b.dataset.cols === cols));
+  render();
+  if (ytReady) setTimeout(initPlayers, 250);
+  updateWatchUI();
   showToast('Loaded: ' + name);
 }
 
 function listSessions() {
   const keys = Object.keys(localStorage).filter(k => k.startsWith('ytgrid_session_'));
-  if (!keys.length) { showToast('No saved sessions', false); return; }
+  if (!keys.length) {
+    showToast('No saved sessions', false);
+    return;
+  }
   const names = keys.map(k => k.replace('ytgrid_session_', '')).join(', ');
   showToast('Sessions: ' + names);
 }
 
-/* ── ping ── */
 function doPing() {
   const dot = document.getElementById('pingDot');
   const txt = document.getElementById('pingText');
-  fetch('/ping')
+
+  fetch('/ping', { cache: 'no-store' })
     .then(r => r.json())
     .then(d => {
       dot.classList.add('alive');
-      txt.textContent = 'Server alive · ' + d.time;
+      txt.textContent = 'Server alive · ' + (d.time || 'ok');
       setTimeout(() => dot.classList.remove('alive'), 3000);
     })
     .catch(() => {
@@ -523,15 +901,56 @@ function doPing() {
     });
 }
 
-doPing();
-setInterval(doPing, 5 * 60 * 1000);
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) {
+    setTimeout(() => {
+      requestWakeLock();
+      restartAllPlayers();
+      doPing();
+    }, 500);
+  }
+});
 
-/* ── keyboard ── */
+window.addEventListener('focus', () => {
+  setTimeout(() => {
+    requestWakeLock();
+    restartAllPlayers();
+    doPing();
+  }, 500);
+});
+
+window.addEventListener('pageshow', () => {
+  setTimeout(() => {
+    requestWakeLock();
+    restartAllPlayers();
+    doPing();
+  }, 500);
+});
+
+document.addEventListener('click', () => {
+  requestWakeLock();
+  restartAllPlayers();
+}, { passive: true });
+
 document.getElementById('urlInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') addVideo();
 });
 
-window.addEventListener('resize', () => { if (videos.length) render(); });
+document.getElementById('targetHours').addEventListener('input', updateWatchUI);
+
+window.addEventListener('resize', () => {
+  if (videos.length) {
+    render();
+    if (ytReady) setTimeout(initPlayers, 250);
+  }
+});
+
+doPing();
+setInterval(doPing, 5 * 60 * 1000);
+startKeepAliveLoop();
+startWatchTracking();
+updateWatchUI();
+render();
 </script>
 </body>
 </html>
